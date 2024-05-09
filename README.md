@@ -9,44 +9,44 @@ This is a work in progress.
 
 3. Copy the following snippet and paste it at the end of `ProviderDescriptors.xml` right before `</dtm:ProviderDescriptors>`:
    ```xml
-    <dtm:ProviderDescriptor SourceType="MySql.Data.MySqlClient.MySqlConnection">
-
-        <dtm:SchemaNames
-            TablesSchemaName="Tables"
-            ColumnsSchemaName="Columns"
-            ViewsSchemaName="Views"
-        />
-        
-        <dtm:TableSchemaAttributes
-            TableCatalogColumnName=""
-            TableSchemaColumnName=""
-            TableNameColumnName="TABLE_NAME"
-            TableTypeColumnName="TABLE_TYPE"
-            TableDescriptor="BASE TABLE"
-            ViewDescriptor="VIEW"
-            SynonymDescriptor="SYNONYM"
-            NumberOfTableRestrictions="200"
-        />
-
-        <dtm:ColumnSchemaAttributes
-            NameColumnName="COLUMN_NAME"
-            OrdinalPositionColumnName="ORDINAL_POSITION"
-            DataTypeColumnName="DATA_TYPE"
-            MaximumLengthColumnName="CHARACTER_MAXIMUM_LENGTH"
-            NumericPrecisionColumnName="NUMERIC_PRECISION"
-            NumericScaleColumnName="NUMERIC_SCALE"
-            NullableColumnName="IS_NULLABLE"
-            DateTimePrecisionColumnName="DATETIME_PRECISION"
-            NumberOfColumnRestrictions="200"
-        />
-
-        <dtm:Literals
-            PrefixQualifier=""
-            SuffixQualifier=""
-            CatalogSeparator="."
-            SchemaSeparator="."
-        />
-    </dtm:ProviderDescriptor>
+       <dtm:ProviderDescriptor SourceType="MySql.Data.MySqlClient.MySqlConnection">
+   
+           <dtm:SchemaNames
+               TablesSchemaName="Tables"
+               ColumnsSchemaName="Columns"
+               ViewsSchemaName="Views"
+           />
+           
+           <dtm:TableSchemaAttributes
+               TableCatalogColumnName=""
+               TableSchemaColumnName=""
+               TableNameColumnName="TABLE_NAME"
+               TableTypeColumnName="TABLE_TYPE"
+               TableDescriptor="BASE TABLE"
+               ViewDescriptor="VIEW"
+               SynonymDescriptor ="SYNONYM"
+               NumberOfTableRestrictions="200"
+           />
+   
+           <dtm:ColumnSchemaAttributes
+               NameColumnName = "COLUMN_NAME"
+               OrdinalPositionColumnName="ORDINAL_POSITION"
+               DataTypeColumnName = "DATA_TYPE"
+               MaximumLengthColumnName = "CHARACTER_MAXIMUM_LENGTH"
+               NumericPrecisionColumnName = "NUMERIC_PRECISION"
+               NumericScaleColumnName = "NUMERIC_SCALE"
+               NullableColumnName="IS_NULLABLE"
+               DateTimePrecisionColumnName="DATETIME_PRECISION"
+               NumberOfColumnRestrictions="200"
+           />
+   
+           <dtm:Literals
+               PrefixQualifier=""
+               SuffixQualifier=""
+               CatalogSeparator="."
+               SchemaSeparator="."
+           />
+       </dtm:ProviderDescriptor>
    ```
 
 ## Create and prepare the SSC schema on SQL Server
