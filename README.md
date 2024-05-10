@@ -1,5 +1,10 @@
 # How to migrate SSC data from MySQL to SQL Server
-This is a work in progress.
+Before getting started on the data migration, please make sure to take Tomcat offline. If SSC is still running while performing the data migration, you may get errors and inconsistencies. Depending on the size of your existing MySQL database and the network connection, the process may take from a few minutes to a few days, so please prepare your team for any potential downtime.
+
+## Requirements
+To perform the migration, a Windows machine will be required that has network access to both your existing MySQL database and the new SQL Server database. On this Windows machine, please install the latest version of [SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) (SSMS). Ideally, the Windows machine should be on the same physical subnet as both servers in order to ensure rapid transfer of data from MySQL to the Import/Export Wizard, and from the Wizard to SQL Server.
+
+[MySQL Workbench](https://dev.mysql.com/downloads/workbench/) will also be required to run a few SQL commands and make some minor configuration changes. You can either install MySQL Workbench on the same Windows machine as SSMS or some other machine that has access to your MySQL database.
 
 ## MySQL Connector/NET
 1. Download and install [MySQL Connector/NET](https://dev.mysql.com/downloads/connector/net/).
@@ -7,7 +12,7 @@ This is a work in progress.
 
 2. Assuming you have the latest version of SSMS (version 20.x as of this writing), open the file `C:\Program Files (x86)\Microsoft SQL Server Management Studio 20\Common7\IDE\CommonExtensions\Microsoft\SSIS\160\ProviderDescriptors\ProviderDescriptors.xml` in your favorite text editor and create a couple of empty lines after line 197.
 
-3. Copy the following snippet and paste it at the end of `ProviderDescriptors.xml` right before `</dtm:ProviderDescriptors>`:
+3. Copy the following snippet and paste it at the end of `ProviderDescriptors.xml` (line 198) right before `</dtm:ProviderDescriptors>`:
    ```xml
        <dtm:ProviderDescriptor SourceType="MySql.Data.MySqlClient.MySqlConnection">
    
@@ -114,7 +119,9 @@ This is a work in progress.
    If you don’t change the data type from `BLOB` to `VARBINARY`, the Import and Export Wizard will throw an error about incompatible data types between source and target columns. If you wish, you can change it back to `BLOB` after the migration is complete.
 
 2. Add `ANSI_QUOTES` to the `sql_mode` system variable. You can do this directly in MySQL Workbench. Here’s a screenshot for reference:
-   (add screenshot)
+
+   ![ANSI_QUOTES](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/07cd0a11-9245-490a-8e62-25d697bc6a76)
+
    If you don’t do this, the migration will fail.
 
 ## Migrate the data from MySQL to SQL Server
@@ -128,33 +135,51 @@ This is a work in progress.
    - **Password:** `*****`
    - **User ID:** `root`
   
-   If MySQL is located on a remote machine and encryption is required, you’ll need to fill out the necessary fields. Click Next.
+   Here's a screenshot for reference:
 
-4. (Need to update this step) In the “Choose a Destination” section, select “SQL Server Native Client 11.0” from the “Destination” drop-down list. Enter the appropriate server name and database name. (Make sure it’s the same database that you created in the “Create and prepare the SSC schema on SQL Server” section above.) Click Next.
+   ![DataSource](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/cd0a4c77-752e-47f1-879c-600db117c49a)
 
-5. In the “Specify Table Copy or Query” step, make sure “Copy data from one or more tables or views” is selected and click Next.
+   If MySQL is located on a remote machine and encryption is required, you’ll need to fill out the necessary fields.
 
-6. In the “Select Source Tables and Views” section, select everything by clicking the checkbox to the left of the “Source” column. While everything is selected and highlighted, click the “Edit Mappings” button and select the option “Enable identity insert”. Here’s a screenshot for reference:
-   > (Include screenshot)
+   Click Next.
 
-   Click OK.
+5. In the “Choose a Destination” section, select “Microsoft OLE DB Driver for SQL Server” from the “Destination” drop-down list. If you don't see it in the list, please download it from [here](https://learn.microsoft.com/en-us/sql/connect/oledb/download-oledb-driver-for-sql-server) and restart the Import/Export Wizard.
 
-7. Back in the “Select Source Tables and Views” section, look for the databasechangelog table. In SQL Server, that table is in all upper-case. Under the Destination column, select `[dbo].[DATABASECHANGELOG]`. Here’s a screenshot for reference:
-   > (Include screenshot)
+   Click on the Properties button and enter the appropriate details. (Make sure it’s the same database that you created in the “Create and prepare the SSC schema on SQL Server” section above.) Here's a screenshot for reference:
 
-8. Before you click Next, highlight all tables again and click the “Edit Mappings” button. Make sure “Enable identity insert” is selected.
+   ![Destination](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/7fdd4eb2-262a-4ccb-9464-62d86cf16156)
 
-9. Click Next until you reach the end. Then click the Finish button to start the migration process.
+   Click the Advanced tab and increase the "Connect timeout" field to, say, `86400` (24 hours).
 
-10. Once the migration has successfully completed, enable all constraints on the SSC database in SQL Server:
+   Click OK, then click Next.
+
+7. In the “Specify Table Copy or Query” step, make sure “Copy data from one or more tables or views” is selected and click Next. If this option is not availble for selection, then you did not make the necessary changes to the `ProviderDescriptors.xml` file above. 
+
+8. In the “Select Source Tables and Views” section, select everything by clicking the checkbox to the left of the “Source” column. Look for the `databasechangelog` table under the Source column. You may notice that the corresponding table under the Destination column is not properly mapped. In SQL Server, that table is in all upper-case. Under the Destination column, correct the mapping by selecting `[dbo].[DATABASECHANGELOG]`.
+
+   While everything is selected and highlighted, click the “Edit Mappings” button and select the option “Enable identity insert”. Here’s a screenshot for reference:
+
+   ![TableMappings](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/4e828ace-87aa-4d27-9d06-7ba1f5aa00f3)
+
+   Before you click Next, highlight all tables again and click the “Edit Mappings” button. Make sure “Enable identity insert” is indeed selected.
+
+9. Click Next until you reach the end. Then click the Finish button to start the migration process. This may take from a few minutes to a few days, depending on the size of your database and the network speed.
+
+## Final steps
+1. Once the migration has successfully completed, enable all constraints on the SSC database in SQL Server:
     ```tsql
     -- Enable all constraints for database
     EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
     ```
 
-11. In the MySQL database, undo the change to the data type of the two `VARBINARY` columns:
+2. (Optional) In the MySQL database, undo the change to the data type of the two `VARBINARY` columns:
     ```tsql
     ALTER TABLE f360global MODIFY privateKey BLOB;
     ALTER TABLE f360global MODIFY publicKey BLOB;
     ```
-12. Remove `ANSI_QUOTES` from the `sql_mode` system variable.
+3. (Optional) Remove `ANSI_QUOTES` from the `sql_mode` system variable.
+
+## Afterwards
+Once the data migration is complete, you can upgrade SSC to the latest version normally.
+
+If you encounter any errors or mistakes in this guide, please file an [issue](https://github.com/fortifysoftware/mysql-to-sqlserver/issues). Thank you!
