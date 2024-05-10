@@ -55,7 +55,7 @@ To perform the migration, a Windows machine will be required that has network ac
    ```
 
 ## Create and prepare the SSC schema on SQL Server
-1. Using SSMS, create a new SSC database in SQL Server with case-sensitive collation (e.g., `SQL_Latin1_General_CP1_CS_AS`). Also make sure to enable “Is Read Committed Snapshot” and “Allow Snapshot Isolation”.
+1. Using SSMS, create a new SSC database in SQL Server with case-sensitive collation (e.g., `SQL_Latin1_General_CP1_CS_AS`). Also make sure to enable “Is Read Committed Snapshot” and “Allow Snapshot Isolation”. If you prefer SQL commands to create the database, use the following as a reference:
    ```tsql
    CREATE DATABASE ssc
    COLLATE SQL_Latin1_General_CP1_CS_AS;
