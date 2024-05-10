@@ -118,11 +118,11 @@ To perform the migration, a Windows machine will be required that has network ac
    ```
    If you don’t change the data type from `BLOB` to `VARBINARY`, the Import and Export Wizard will throw an error about incompatible data types between source and target columns. If you wish, you can change it back to `BLOB` after the migration is complete.
 
-2. Add `ANSI_QUOTES` to the `sql_mode` system variable. You can do this directly in MySQL Workbench. Here’s a screenshot for reference:
+2. Add `ANSI_QUOTES` to the `sql_mode` system variable. Without `ANSI_QUOTES`, the migration will fail. You can do this directly in MySQL Workbench. Here’s a screenshot for reference:
 
    ![ANSI_QUOTES](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/07cd0a11-9245-490a-8e62-25d697bc6a76)
 
-   If you don’t do this, the migration will fail.
+   There should be no need to restart the MySQL service. The change should take effect immediately.
 
 ## Migrate the data from MySQL to SQL Server
 1. In SSMS, right-click on the new (and empty) SSC database and select **Tasks > Import Data**. The SQL Server Import and Export Wizard will open.
