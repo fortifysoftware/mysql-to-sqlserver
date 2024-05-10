@@ -29,17 +29,17 @@ To perform the migration, a Windows machine will be required that has network ac
                TableTypeColumnName="TABLE_TYPE"
                TableDescriptor="BASE TABLE"
                ViewDescriptor="VIEW"
-               SynonymDescriptor ="SYNONYM"
+               SynonymDescriptor="SYNONYM"
                NumberOfTableRestrictions="200"
            />
    
            <dtm:ColumnSchemaAttributes
-               NameColumnName = "COLUMN_NAME"
+               NameColumnName="COLUMN_NAME"
                OrdinalPositionColumnName="ORDINAL_POSITION"
-               DataTypeColumnName = "DATA_TYPE"
-               MaximumLengthColumnName = "CHARACTER_MAXIMUM_LENGTH"
-               NumericPrecisionColumnName = "NUMERIC_PRECISION"
-               NumericScaleColumnName = "NUMERIC_SCALE"
+               DataTypeColumnName="DATA_TYPE"
+               MaximumLengthColumnName="CHARACTER_MAXIMUM_LENGTH"
+               NumericPrecisionColumnName="NUMERIC_PRECISION"
+               NumericScaleColumnName="NUMERIC_SCALE"
                NullableColumnName="IS_NULLABLE"
                DateTimePrecisionColumnName="DATETIME_PRECISION"
                NumberOfColumnRestrictions="200"
