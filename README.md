@@ -93,9 +93,8 @@ To perform the migration, a Windows machine will be required that has network ac
    HAVING max(i.rows)>0
    ORDER BY 'Total Record Count' DESC;
    ```
-6. Truncate all tables in the result from the previous step. If one of the tables is `bugfieldtemplategroup`, you’ll need to first drop the `FK_BugfieldTemplateGroupId` constraint and recreate it after the truncate command. For example:
+6. Truncate all tables in the result from the previous step _except_ the `DATABASECHANGELOG` table. Also, if one of the tables is `bugfieldtemplategroup`, you’ll need to first drop the `FK_BugfieldTemplateGroupId` constraint and recreate it after the truncate command. For example:
    ```tsql
-   TRUNCATE TABLE DATABASECHANGELOG;
    TRUNCATE TABLE configproperty;
    TRUNCATE TABLE bugfieldtemplate;
    TRUNCATE TABLE applicationstate;
@@ -155,13 +154,11 @@ To perform the migration, a Windows machine will be required that has network ac
 
 7. In the “Specify Table Copy or Query” step, make sure “Copy data from one or more tables or views” is selected and click Next. If this option is not availble for selection, then you did not make the necessary changes to the `ProviderDescriptors.xml` file above. 
 
-8. In the “Select Source Tables and Views” section, select everything by clicking the checkbox to the left of the “Source” column. Look for the `databasechangelog` table under the Source column. You may notice that the corresponding table under the Destination column is not properly mapped. In SQL Server, that table is in all upper-case. Under the Destination column, correct the mapping by selecting `[dbo].[DATABASECHANGELOG]`.
+8. In the “Select Source Tables and Views” section, select everything by clicking the checkbox to the left of the “Source” column. While everything is selected and highlighted, click the “Edit Mappings” button and select the option “Enable identity insert”. Click OK. Now click the `databasechangelog` row and remove the checkmark next to it. In other words, make sure all tables have a checkmark except for the `databasechangelog` table. Here’s an animation for reference:
 
-   While everything is selected and highlighted, click the “Edit Mappings” button and select the option “Enable identity insert”. Here’s a screenshot for reference:
+   ![TableMappings](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/2139eff2-f064-4257-8958-27c31ea4be08)
 
-   ![TableMappings](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/4e828ace-87aa-4d27-9d06-7ba1f5aa00f3)
-
-   Before you click Next, highlight all tables again and click the “Edit Mappings” button. Make sure “Enable identity insert” is indeed selected.
+   Before you click Next, highlight all tables again except for `databasechangelog` and click the “Edit Mappings” button. Make sure “Enable identity insert” is indeed selected.
 
 9. Click Next until you reach the end. Then click the Finish button to start the migration process. This may take from a few minutes to a few days, depending on the size of your database and the network speed.
 
