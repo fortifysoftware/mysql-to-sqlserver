@@ -142,7 +142,7 @@ To perform the migration, a Windows machine will be required that has network ac
 
    Click Next.
 
-5. In the “Choose a Destination” section, select “Microsoft OLE DB Driver for SQL Server” from the “Destination” drop-down list. If you don't see it in the list, please download it from [here](https://learn.microsoft.com/en-us/sql/connect/oledb/download-oledb-driver-for-sql-server) and restart the Import/Export Wizard.
+4. In the “Choose a Destination” section, select “Microsoft OLE DB Driver for SQL Server” from the “Destination” drop-down list. If you don't see it in the list, please download it from [here](https://learn.microsoft.com/en-us/sql/connect/oledb/download-oledb-driver-for-sql-server) and restart the Import/Export Wizard.
 
    Click on the Properties button and enter the appropriate details. (Make sure it’s the same database that you created in the “Create and prepare the SSC schema on SQL Server” section above.) Here's a screenshot for reference:
 
@@ -152,15 +152,15 @@ To perform the migration, a Windows machine will be required that has network ac
 
    Click OK, then click Next.
 
-7. In the “Specify Table Copy or Query” step, make sure “Copy data from one or more tables or views” is selected and click Next. If this option is not availble for selection, then you did not make the necessary changes to the `ProviderDescriptors.xml` file above. 
+5. In the “Specify Table Copy or Query” step, make sure “Copy data from one or more tables or views” is selected and click Next. If this option is not availble for selection, then you did not make the necessary changes to the `ProviderDescriptors.xml` file above. 
 
-8. In the “Select Source Tables and Views” section, select everything by clicking the checkbox to the left of the “Source” column. While everything is selected and highlighted, click the “Edit Mappings” button and select the option “Enable identity insert”. Click OK. Now click the `databasechangelog` row and remove the checkmark next to it. In other words, make sure all tables have a checkmark except for the `databasechangelog` table. Here’s an animation for reference:
+6. In the “Select Source Tables and Views” section, select everything by clicking the checkbox to the left of the “Source” column. While everything is selected and highlighted, click the “Edit Mappings” button and select the option “Enable identity insert”. Click OK. Now click the `databasechangelog` row and remove the checkmark next to it. In other words, make sure all tables have a checkmark except for the `databasechangelog` table. Here’s an animation for reference:
 
    ![TableMappings](https://github.com/fortifysoftware/mysql-to-sqlserver/assets/43420281/2139eff2-f064-4257-8958-27c31ea4be08)
 
    Before you click Next, highlight all tables again except for `databasechangelog` and click the “Edit Mappings” button. Make sure “Enable identity insert” is indeed selected.
 
-9. Click Next until you reach the end. Then click the Finish button to start the migration process. This may take from a few minutes to a few days, depending on the size of your database and the network speed.
+7. Click Next until you reach the end. Then click the Finish button to start the migration process. This may take from a few minutes to a few days, depending on the size of your database and the network speed.
 
 ## Final steps
 1. Once the migration has successfully completed, enable all constraints on the SSC database in SQL Server:
